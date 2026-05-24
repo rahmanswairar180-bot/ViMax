@@ -48,8 +48,12 @@ class Orchestrator:
 
     def __init__(
         self,
-        num_frames: int = 8,
-        num_camera_candidates: int = 5,
+        # Bumped num_frames from 8 to 12 — more frames gives noticeably better
+        # scene descriptions for longer/more dynamic clips in my testing.
+        num_frames: int = 12,
+        # Increased candidates from 5 to 8 so the selector has a wider pool to
+        # choose from; quality of the best pick improves with more options.
+        num_camera_candidates: int = 8,
         output_dir: str = "outputs",
     ) -> None:
         """
@@ -84,54 +88,4 @@ class Orchestrator:
         Args:
             video_path: Absolute or relative path to the input video file.
 
-        Returns:
-            A :class:`PipelineResult` containing all intermediate artefacts
-            and the path to the best generated image.
-        """
-        logger.info("[Orchestrator] Starting pipeline for: %s", video_path)
-
-        # Step 1 — video analysis
-        logger.info("[Orchestrator] Step 1/4 — analysing video")
-        analysis: VideoAnalysisResult = self._video_analyzer.analyze(video_path)
-
-        # Step 2 — scene description
-        logger.info("[Orchestrator] Step 2/4 — generating scene description")
-        scene_description: SceneDescription = self._scene_agent.describe(
-            frames=analysis.frames,
-            metadata=analysis.metadata,
-        )
-
-        # Step 3 — camera image generation
-        logger.info(
-            "[Orchestrator] Step 3/4 — generating %d camera candidates",
-            self.num_camera_candidates,
-        )
-        candidate_paths: list[str] = []
-        for i in range(self.num_camera_candidates):
-            image_path = self._camera_generator.get_new_camera_image(
-                scene_description=scene_description,
-                index=i,
-            )
-            if image_path:
-                candidate_paths.append(image_path)
-                logger.debug("[Orchestrator] Candidate %d saved to %s", i, image_path)
-
-        # Step 4 — best image selection
-        logger.info("[Orchestrator] Step 4/4 — selecting best image")
-        best: Optional[str] = None
-        if candidate_paths:
-            best = select_best_image(
-                candidate_paths=candidate_paths,
-                scene_description=scene_description,
-            )
-            logger.info("[Orchestrator] Best image selected: %s", best)
-        else:
-            logger.warning("[Orchestrator] No candidate images were generated.")
-
-        return PipelineResult(
-            video_path=video_path,
-            analysis=analysis,
-            scene_description=scene_description,
-            candidate_image_paths=candidate_paths,
-            best_image_path=best,
-        )
+        Return
