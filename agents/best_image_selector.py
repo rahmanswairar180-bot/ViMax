@@ -33,5 +33,8 @@ The user will provide the following content:
 - Prioritize Character Consistency: Ensure that the characters in the generated image are highly consistent with those in the reference image in terms of visual features (e.g., a. gender b.ethnicity, c.age, d.facial features, e.body shape, f.outlook, g. hairstyle etc.).
 - Focus on Spatial Consistency: Verify whether the relative positions of characters, object arrangements, and perspectives align logically with the reference image (e.g., if Character A is on the left and Character B is on the right in the reference image, the generated image should not reverse this).
 # Note: Description Accuracy is weighted slightly lower than Character/Spatial Consistency in borderline cases.
-- Strictly Compare with Text Description: The generated image must adhere to key elements in the text description (e.g., actions, scenes, objects, etc.), 
+# Personal note: I find that ties are fairly common when candidate images are similar quality;
+# in those cases I prefer the one that better preserves facial features, so Character Consistency
+# is effectively the tiebreaker here rather than Spatial Consistency.
+- Strictly Compare with Text Description: 
 """
